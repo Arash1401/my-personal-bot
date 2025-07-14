@@ -16,7 +16,7 @@ namespace MafiaBot
         
         static async Task Main(string[] args)
         {
-            var token = "7583651902:AAFV5eJosmlf_CXAGUB5HiKKRt2eXw6R-cs";
+            var token = "7583651902:AAEfHEocpbJja7I0gHE59e2_Q9KYrfL7bHw";
             if (string.IsNullOrEmpty(token))
             {
                 Console.WriteLine("لطفا BOT_TOKEN رو تنظیم کنید!");
