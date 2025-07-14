@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Telegram.Bot;
@@ -15,8 +15,16 @@ namespace MafiaBot
 
         static async Task Main()
         {
-            // توکن ربات خود را اینجا قرار دهید
-            var botToken = "7583651902:AAFKBgpSzvYo4itoTyuyz4VmR4DPoP-hMzk";
+            // ✅ توکن از Environment Variable
+            var botToken = Environment.GetEnvironmentVariable("BOT_TOKEN");
+            
+            if (string.IsNullOrEmpty(botToken))
+            {
+                Console.WriteLine("ERROR: BOT_TOKEN not found!");
+                return;
+            }
+
+            Console.WriteLine($"Token loaded: {botToken.Substring(0, 10)}...");
 
             botClient = new TelegramBotClient(botToken);
             gameManager = new GameManager(botClient);
@@ -37,10 +45,10 @@ namespace MafiaBot
 
             var me = await botClient.GetMeAsync();
             Console.WriteLine($"Bot started! @{me.Username}");
-            Console.WriteLine("Press any key to stop...");
-            Console.ReadLine();
+            Console.WriteLine("Bot is running... Press Ctrl+C to stop");
 
-            cts.Cancel();
+            // ✅ برای سرور - بدون نیاز به ورودی
+            await Task.Delay(Timeout.Infinite, cts.Token);
         }
 
         static async Task HandleUpdateAsync(ITelegramBotClient botClient, Update update, CancellationToken cancellationToken)
@@ -68,15 +76,22 @@ namespace MafiaBot
             catch (Exception ex)
             {
                 Console.WriteLine($"Error in HandleUpdate: {ex.Message}");
+                Console.WriteLine($"StackTrace: {ex.StackTrace}");
             }
         }
 
         static Task HandlePollingErrorAsync(ITelegramBotClient botClient, Exception exception, CancellationToken cancellationToken)
         {
             Console.WriteLine($"Polling error: {exception.Message}");
+            
+            // نمایش جزئیات بیشتر برای debug
+            if (exception is Telegram.Bot.Exceptions.ApiRequestException apiEx)
+            {
+                Console.WriteLine($"Telegram API Error Code: {apiEx.ErrorCode}");
+                Console.WriteLine($"Details: {apiEx.Message}");
+            }
+            
             return Task.CompletedTask;
         }
     }
 }
-
-
