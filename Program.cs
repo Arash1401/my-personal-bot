@@ -16,7 +16,7 @@ namespace MafiaBot
         static async Task Main()
         {
             // ✅ توکن از Environment Variable
-            var botToken = Environment.GetEnvironmentVariable("BOT_TOKEN");
+            var botToken = "7583651902:AAFV5eJosmlf_CXAGUB5HiKKRt2eXw6R-cs";
             
             if (string.IsNullOrEmpty(botToken))
             {
